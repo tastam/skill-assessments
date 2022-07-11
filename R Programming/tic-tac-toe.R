@@ -1,4 +1,4 @@
-# This R script was written by @tastam on July 10, 2022.
+# R script "tic-tac-toe.R" was written by @tastam on July 10, 2022.
 # This is a Tic-Tac-Toe Game that allows rematches and total tallies.
 
 if (interactive()) {
@@ -122,4 +122,3 @@ while (play == "Y") {
 if (play == "N"){
     cat("\nAlright. Come again next time! Bye Bye!\n")
 }
-
