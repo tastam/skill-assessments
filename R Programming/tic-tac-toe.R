@@ -1,3 +1,6 @@
+# This R script was written by @tastam on July 10, 2022.
+# This is a Tic-Tac-Toe Game that allows rematches and total tallies.
+
 if (interactive()) {
   con <- stdin()
 } else {
@@ -20,7 +23,6 @@ cat("\nXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOX
 # Confirm if want to play
 play <- toupper(readLines(con = con, n = 1))
 
-# Allow replay
 while (play == "Y") {
   # Count number of rounds, reset after each game
   rct <- 1
@@ -35,14 +37,16 @@ while (play == "Y") {
   checkA <- FALSE
   checkB <- FALSE
   
+  print(gamematrix)
+  
   # One Game
   while (!(win %in% c("X", "O")) & rct < 10) {
     # Track whose turn it is
     rtrk <- rct%%2
     if (rtrk == 1){
-      cat("\nPlayer X's turn!")
+      cat("\nPlayer X's turn!\n")
     } else if (rtrk == 0) {
-      cat("\nPlayer O's turn!")
+      cat("\nPlayer O's turn!\n")
     }
     
     # Ask user to input X or O
@@ -71,7 +75,7 @@ while (play == "Y") {
       if (row %in% c(1:3) & column %in% c(1:3) && is.na(gamematrix[row, column]) == TRUE) {
         gamematrix[row, column] <- symbol
         # User input valid -- Confirm play
-        cat("Confirm:", symbol, "at row", row, "and column", column, "\n[y/n]?")
+        cat("Confirm:", symbol, "at row", row, "and column", column, "\n[y/n]? ")
         confirm <- toupper(readLines(con = con, n = 1))
         if (confirm == "Y"){
           checkB <- TRUE
@@ -93,16 +97,16 @@ while (play == "Y") {
     if (3 %in% sumlist){
       win <- "X"
       playerXpts <- playerXpts + 1
-      cat("Congratulations to Player X!
-          \nCurrent score: Player O has", playerXpts, "points and Player X has", playerOpts, "points")
+      cat("\nCongratulations to Player X!
+          \nCurrent score: Player X has", playerXpts, "points and Player O has", playerOpts, "points")
     } else if (-3 %in% sumlist) {
       win <- "O"
       playerOpts <- playerOpts + 1
-      cat("Congratulations to Player O!
-        \nCurrent score: Player O has", playerXpts, "points and Player X has", playerOpts, "points")
+      cat("\nCongratulations to Player O!
+        \nCurrent score: Player X has", playerXpts, "points and Player O has", playerOpts, "points")
     } else if (sum(is.na(gamematrix) == TRUE) == 0){
-      cat("Tied!
-          \nCurrent score: Player O has", playerXpts, "points and Player X has", playerOpts, "points")
+      cat("\nTied!
+          \nCurrent score: Player X has", playerXpts, "points and Player O has", playerOpts, "points")
     }
     rct <- rct + 1
     checkA <- FALSE
