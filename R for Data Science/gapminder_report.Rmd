@@ -1,0 +1,62 @@
+---
+title: "Gapminder Report"
+author: "Tammie Tam"
+date: "7/13/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE}
+# load packages
+library(tidyverse)
+library(corrr)
+library(plotly)
+```
+
+1. Read in the `gapminder_clean.csv` data as a `tibble` using `read_csv`.
+```{r}
+# load in gapminder dataset
+gapminder <- read_csv("gapminder_clean.csv")
+head(gapminder)
+```
+
+2. Filter the data to include only rows where `Year` is `1962` and then make a scatter plot comparing `'CO2 emissions (metric tons per capita)'` and `gdpPercap` for the filtered data.
+```{r}
+# filter only Year 1962 
+gapminder_1962 <- gapminder %>% filter(Year == "1962")
+
+# plot gdp v CO2
+gapminder_1962 %>% ggplot(aes(gdpPercap,`CO2 emissions (metric tons per capita)`)) + geom_point()
+```
+
+3. On the filtered data, calculate the correlation of `'CO2 emissions (metric tons per capita)'` and `gdpPercap`. What is the correlation and associated p value?
+```{r}
+gdp.co2.cor <- cor.test(x=gapminder_1962$gdpPercap,y=gapminder_1962$`CO2 emissions (metric tons per capita)`)
+# correlation val
+gdp.co2.cor$estimate
+# correlation p val
+gdp.co2.cor$p.value
+```
+
+4. On the unfiltered data, answer "In what year is the correlation between `'CO2 emissions (metric tons per capita)'` and `gdpPercap` the strongest?" Filter the dataset to that year for the next step...
+```{r}
+gapminder %>% group_by(Year) %>% summarize(correlation=cor(`CO2 emissions (metric tons per capita)`,gdpPercap,use = "na.or.complete")) %>% subset(correlation == max(correlation))
+gapminder_1967 <- gapminder %>% filter(Year=="1967")
+```
+
+5. Using `plotly`, create an interactive scatter plot comparing `'CO2 emissions (metric tons per capita)'` and `gdpPercap`, where the point size is determined by `pop` (population) and the color is determined by the `continent`. You can easily convert any `ggplot` plot to a `plotly` plot using the `ggplotly()` command.
+```{r}
+plt <- gapminder_1967 %>% ggplot(aes(gdpPercap,`CO2 emissions (metric tons per capita)`, color = continent, size = pop)) + geom_point()
+ggplotly(plt)
+```
+
+Now, without further guidance, use your `R` Data Science skills (and appropriate statistical tests) to answer the following:
+
+1. What is the relationship between `continent` and `'Energy use (kg of oil equivalent per capita)'`? (stats test needed)
+2. Is there a significant difference between Europe and Asia with respect to `'Imports of goods and services (% of GDP)'` in the years after 1990? (stats test needed)
+3. What is the country (or countries) that has the highest `'Population density (people per sq. km of land area)'` across all years? (i.e., which country has the highest average ranking in this category across each time point in the dataset?)
+4. What country (or countries) has shown the greatest increase in `'Life expectancy at birth, total (years)'` since 1962? 
+
